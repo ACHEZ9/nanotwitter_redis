@@ -18,6 +18,8 @@ configure :production do
       :database => db.path[1..-1],
       :encoding => 'utf8'
   )
+
+  $redis = Redis.new(:host => "pub-redis-18988.us-east-1-2.4.ec2.garantiadata.com", :port => 18988)
 end
 
 configure :development, :test do
