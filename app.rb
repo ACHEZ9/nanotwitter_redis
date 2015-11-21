@@ -22,8 +22,8 @@ configure do
 end
 
 # For loader.io verification
-get '/loaderio-787df89960c94cbe5c97842abeeb978e/' do
-    'loaderio-787df89960c94cbe5c97842abeeb978e'
+get '/loaderio-a299d935be12bb2bf88aa251e89a7ee1/' do
+    'loaderio-a299d935be12bb2bf88aa251e89a7ee1'
 end
 
 get '/redis/add' do
