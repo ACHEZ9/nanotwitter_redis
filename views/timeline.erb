@@ -1,0 +1,63 @@
+<html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<head>
+    <title>NanoTwitter</title>
+</head>
+
+<body>
+<div class="row">
+    <div class="container-fluid">
+        <div class="navbar navbar-custom">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    <%= "#{settings.app_name} #{settings.version}" %>
+                </a>
+            </div>
+            <ul class="nav navbar-nav pull-right">
+                <li><a href = '/timeline'>Timeline interface</a></li>
+                <% if !session[:logged_in_user_id].nil?  %>
+                    <li><a href = '/profile'>Hi, <%= session[:logged_in_user_name]%> </a>
+                    <li><a href = '/logout'>Log-out</a></li>
+                <% else %>
+                    <li><a href = '/register'>Register/Login</a></li>
+                <% end %>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<% if !session[:logged_in_user_id].nil? %>
+    <div class="row" style="padding-left:10px; padding-right:10px">
+        <div class="col-md-8 col-md-offset-4">
+            <div class="input-group">
+                <h4>Tweet</h4>
+                <form action="/tweet" method="POST">
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="content" placeholder="Max 140 characters" required="true"/>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="button btn-lg btn-primary"type="submit" value="Submit" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<div class="row" style="padding-left:10px; padding-right:10px">
+    <div class="col-md-8 col-md-offset-3">
+        <h3> Timeline</h3>
+        <ul>
+            <% @tweets.each do |t|%>
+                <% op = t.user_name %>
+                <li><%=
+                    "<a href=\"/profile/#{op}\"> #{op} </a> : #{t.content}"
+                %></li>
+            <% end %>
+        </ul>
+    </div>
+</div>
+</body>
+
+

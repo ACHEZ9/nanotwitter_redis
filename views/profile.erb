@@ -1,0 +1,98 @@
+<html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<head>
+    <title>NanoTwitter</title>
+</head>
+
+<body>
+<div class="row">
+    <div class="container-fluid">
+        <div class="navbar navbar-custom">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    <%= "#{settings.app_name} #{settings.version}" %>
+                </a>
+            </div>
+            <ul class="nav navbar-nav pull-right">
+                <li><a href = '/timeline'>Timeline interface</a></li>
+                <% if !session[:logged_in_user_id].nil?  %>
+                    <li><a href = '/profile'>Hi, <%= session[:logged_in_user_name]%> </a>
+                    <li><a href = '/logout'>Log-out</a></li>
+                <% else %>
+                    <li><a href = '/register'>Register/Login</a></li>
+                <% end %>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="row" style="padding-left:10px; padding-right:10px">
+    <div class="col-md8 col-md-offset-2">
+        <h2> <%= @user.name %> </h2>
+        <h4> <%= @user.email %> </h4>
+        <% if session[:logged_in_user_id] == nil  %>
+            <form action="/register" method="GET">
+                <input class="btn btn-primary" type="submit" value="Log in to follow" />
+            </form>
+        <% elsif session[:logged_in_user_id] == @user.id  %>
+            <div class="row" style="padding-left:10px; padding-right:10px">
+                <div class="input-group">
+                    <h4>Tweet</h4>
+                    <form action="/tweet" method="POST">
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="content" placeholder="Max 140 characters" required="true"/>
+                        </div>
+                        <div class="col-md-3">
+                            <input class="button btn-lg btn-primary"type="submit" value="Submit" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <% elsif @following %>
+            <form action="/unfollows" method="POST">
+                <input type="hidden" name="user_id" value="<%= @user.id %>" />
+                <input class="btn btn-primary" type="submit" value="Unfollow" />
+            </form>
+        <% else %>
+            <form action="/follows" method="POST">
+                <input type="hidden" name="user_id" value="<%= @user.id %>" />
+                <input class="btn btn-primary" type="submit" value="Follow" />
+            </form>
+        <% end %>
+    </div>
+</div>
+
+
+<div class="row" style="padding-left:10px; padding-right:10px">
+    <div class="col-md-8 col-md-offset-1">
+        <h3>Tweets</h3>
+        <ul>
+            <% @tweets.each do |t|%>
+                <li><%=t.content %></br></li>
+            <% end %>
+        </ul>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <% followers = @user.followers %>
+            <b>followers:</b>
+            <ul>
+                <% followers.each do |f| %>
+                    <li><%="<a href=\"/profile/#{f.name}\"> #{f.name} </a>"%></br></li>
+                <% end %>
+            </ul>
+            <% followed = @user.followed_users %>
+            <b>followed users:</b>
+            <ul>
+                <% followed.each do |f| %>
+                    <li><%="<a href=\"/profile/#{f.name}\"> #{f.name} </a>"%></br></li>
+                <% end %>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+
+
