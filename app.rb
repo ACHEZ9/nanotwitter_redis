@@ -22,8 +22,8 @@ configure do
 end
 
 # For loader.io verification
-get '/loaderio-82d98309070f9f1c9315ff5dcd667982/' do
-    'loaderio-82d98309070f9f1c9315ff5dcd667982'
+get '/loaderio-a299d935be12bb2bf88aa251e89a7ee1/' do
+    "loaderio-a299d935be12bb2bf88aa251e89a7ee1"
 end
 
 get '/' do
