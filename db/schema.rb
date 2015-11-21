@@ -21,11 +21,6 @@ ActiveRecord::Schema.define(version: 20151117201113) do
   add_index "follows", ["followed_user_id"], name: "index_follows_on_followed_user_id"
   add_index "follows", ["user_id"], name: "index_follows_on_user_id"
 
-  create_table "timelines", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "tweet_id"
-  end
-
   create_table "tweets", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "content"
