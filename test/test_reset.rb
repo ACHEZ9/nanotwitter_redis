@@ -16,6 +16,7 @@ module NanoTwitter
             Follow.where(user_id: @user.id).destroy_all
             Follow.where(followed_user_id: @user.id).destroy_all
             $redis.del("timeline:user:#{@user.id}")
+            $redis.del("timeline:recent:50")
           end
 
           "Test Reset Run Successful"
