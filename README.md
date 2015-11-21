@@ -1,6 +1,4 @@
 # nanoTwitter
-[![Codeship](https://img.shields.io/codeship/0e88ea30-695a-0133-4ddd-666650db048e.svg)](https://codeship.com/projects/114521) [![Code Climate](https://codeclimate.com/github/keighrim/cs105_nT/badges/gpa.svg)](https://codeclimate.com/github/keighrim/cs105_nT)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/keighrim/cs105_nT/master/LICENSE)
-
 nanoTwitter is a toy-mimic of popular social service [twitter](www.twitter.com), developed by 4 students at Brandeis as a course project from *Software Engineering for scalability*.
 
 ## License
