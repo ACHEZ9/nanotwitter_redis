@@ -21,7 +21,6 @@ class Tweet < ActiveRecord::Base
     #Add to the 50 recent tweets timeline in redis
     $redis.lpushx("timeline:recent:50", self.to_json)
     $redis.ltrim("timeline:recent:50", 0, 49)
-
   end
   
   def self.make_tweet(user, content, tweeted_at)

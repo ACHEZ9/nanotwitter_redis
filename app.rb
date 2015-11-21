@@ -26,15 +26,9 @@ get '/loaderio-a299d935be12bb2bf88aa251e89a7ee1/' do
     'loaderio-a299d935be12bb2bf88aa251e89a7ee1'
 end
 
-get '/redis/add' do
-  10.times do |i|
-    $redis.rpush("list", i)
-  end
-  "Added to list"
-end
-
-get '/redis/get' do
-  $redis.lrange("list", 0, -1)
+#To reset/flush redis cloud database
+get '/redis/reset'
+  $redis.flushall
 end
 
 get '/' do
