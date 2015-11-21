@@ -27,7 +27,7 @@ get '/loaderio-a299d935be12bb2bf88aa251e89a7ee1/' do
 end
 
 #To reset/flush redis cloud database
-get '/redis/reset'
+get '/redis/reset' do
   $redis.flushall
 end
 
