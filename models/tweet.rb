@@ -1,7 +1,7 @@
 class Tweet < ActiveRecord::Base
   belongs_to :user
-  has_many :timelines, dependent: :destroy
-  has_many :users, :through => :timeline
+  # has_many :timelines, dependent: :destroy
+  # has_many :users, :through => :timeline
 
   after_create :add_to_timelines
   validates :user, presence: true
@@ -11,11 +11,17 @@ class Tweet < ActiveRecord::Base
   private
 
   def add_to_timelines
-    #Adding own tweets to timeline currently, can evaluate this
-    Timeline.create(user_id: self.user_id, tweet_id: self.id)
-    user.followers.each do |follower|
-      Timeline.create(user_id: follower.id, tweet_id: self.id)
+    #Add to user and followers timelines in redis
+    @users_to_insert = user.followers.to_a
+    @users_to_insert << user
+    @users_to_insert.each do |u|
+      $redis.lpushx("timeline:user:#{u.id}", self.to_json)
     end
+
+    #Add to the 50 recent tweets timeline in redis
+    $redis.lpushx("timeline:recent:50", self.to_json)
+    $redis.ltrim("timeline:recent:50", 0, 49)
+
   end
   
   def self.make_tweet(user, content, tweeted_at)

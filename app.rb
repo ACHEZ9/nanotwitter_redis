@@ -22,8 +22,19 @@ configure do
 end
 
 # For loader.io verification
-get '/loaderio-a299d935be12bb2bf88aa251e89a7ee1/' do
-    "loaderio-a299d935be12bb2bf88aa251e89a7ee1"
+get '/loaderio-787df89960c94cbe5c97842abeeb978e/' do
+    'loaderio-787df89960c94cbe5c97842abeeb978e'
+end
+
+get '/redis/add' do
+  10.times do |i|
+    $redis.rpush("list", i)
+  end
+  "Added to list"
+end
+
+get '/redis/get' do
+  $redis.lrange("list", 0, -1)
 end
 
 get '/' do
@@ -83,9 +94,15 @@ end
 
 get '/timeline' do
   if session[:logged_in_user_name].nil?
-    @tweets = Tweet.all.order(tweeted_at: :desc).take(50)
+    if $redis.exists("timeline:recent:50")
+      @tweets = $redis.lrange("timeline:recent:50", 0, -1).map{|t| Tweet.new(JSON.parse(t))}
+    else
+      @tweets = Tweet.all.order(tweeted_at: :desc).take(50)
+      @timeline = @tweets.map{|t| t.to_json}
+      $redis.rpush("timeline:recent:50", @timeline)
+    end
   else
-    @tweets = User.find(session[:logged_in_user_id]).feeds.order(tweeted_at: :desc)
+    @tweets = logged_in_user.timeline
   end
   erb :timeline
 end
@@ -122,32 +139,6 @@ get '/profile/:user_name' do |user_name|
     end
   end
 end
-
-=begin
-get '/profile/:user_id' do |user_id|
-  logged_in_user_id = session[:logged_in_user_id]
-  if logged_in_user.nil?
-    redirect '/register'
-  elsif user_id == logged_in_user_id
-    redirect '/profile'
-  else
-    @user = User.find_by_id(user_id)
-    if @user.nil?
-      'User does not exist'
-    else
-      @is_current_user = false
-      is_following = logged_in_user.followed_users.include?(@user)
-      if is_following
-        @following = true
-      else
-        @following = false
-      end
-      @tweets = @user.tweets
-      erb :profile
-    end
-  end
-end
-=end
 
 def logged_in_user
   User.find_by_id(session[:logged_in_user_id])
